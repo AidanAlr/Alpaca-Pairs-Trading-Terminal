@@ -4,6 +4,7 @@ from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
 from Analysis.Dates import Dates
+from MyTimer import timeit
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
@@ -51,6 +52,7 @@ def adf_test(stock_1, stock_2):
         return 'P-Value: ' + str(round(adf_result, 2)) + ' - Failed'
 
 
+@timeit
 def run_adf_on_best_pairs(highest_corr_pairs):
     # Running ADF test
     adf_list = []
@@ -59,4 +61,3 @@ def run_adf_on_best_pairs(highest_corr_pairs):
         adf_list.append(result)
 
     return adf_list
-

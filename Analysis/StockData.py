@@ -16,6 +16,7 @@ from datetime import datetime
 import sys
 
 from Analysis import StatisticalMethods
+from Analysis.Dates import Dates
 from MyTimer import timeit
 pd.set_option('mode.chained_assignment', None)
 
@@ -36,8 +37,8 @@ class StockData:
     @timeit
     def download_stock_data(self, asset_list: list):
         # Setting dataset for the model
-        end = dt.date.today()
-        start = end - pd.DateOffset(days=365)
+        end = Dates.END_DATE.value
+        start = Dates.START_DATE.value
         prices_df = yf.download(tickers=asset_list, start=start, end=end)['Adj Close']
         prices_df = prices_df.dropna(axis=0)
         return prices_df
