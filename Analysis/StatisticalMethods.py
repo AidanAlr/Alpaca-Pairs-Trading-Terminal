@@ -30,8 +30,10 @@ def collect_metrics_for_pair(stock_1, stock_2):
     # Rolling Correlation test
     stock_data_df['roll_corr'] = stock_data_df[stock_1].rolling(180).corr(stock_data_df[stock_2])
 
-    # Smoothed Z Score
-    stock_data_df['z_score'] = stock_data_df.apply(lambda x: x['spread'].rolling(1).mean() - x['spread'].rolling(50).mean() / x['spread'].rolling(50).std())
+    def smooth_zscore(spread):
+        return (spread.rolling(1).mean() - spread.rolling(50).mean()) / spread.rolling(50).std()
+
+    stock_data_df['z_score'] = smooth_zscore(stock_data_df['spread'])
 
     # Trading Signal
     stock_data_df['signal'] = stock_data_df.apply(lambda x: 1 if (x['z_score'] < -1) else (-1 if (x['z_score'] > 1) else 0), axis=1)

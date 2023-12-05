@@ -17,6 +17,7 @@ import sys
 
 from Analysis import StatisticalMethods
 from MyTimer import timeit
+pd.set_option('mode.chained_assignment', None)
 
 
 class StockData:
@@ -29,6 +30,8 @@ class StockData:
         # Adding the results of AD fuller to pairs_df
         self.coint_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(self.coint_correlation_combined_df)
         self.most_suitable_pair = self.find_most_suitable_pair()
+
+
 
     @timeit
     def download_stock_data(self, asset_list: list):
