@@ -1,6 +1,5 @@
 import sys
 import time
-
 from Trading.AlpacaFunctions import AlpacaClient
 
 
@@ -13,8 +12,10 @@ def pause_algo():
         time.sleep(1)
 
 
-def execute_algo():
-    AlpacaClient()
+def execute_algo(tp, sl):
+    alpaca = AlpacaClient()
+    alpaca.print_positions()
+    alpaca.use_live_tp_sl(tp, sl)
 
 
-execute_algo()
+execute_algo(5, 5)

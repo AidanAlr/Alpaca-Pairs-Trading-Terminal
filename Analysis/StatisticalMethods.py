@@ -1,10 +1,13 @@
+import time
+
 import numpy as np
 import yfinance as yf
 from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
 from Analysis.Dates import Dates
-from MyTimer import timeit
+from utils.MyTimer import timeit
+from utils.ProgressBar import print_progress_bar
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
@@ -56,8 +59,15 @@ def adf_test(stock_1, stock_2):
 def run_adf_on_best_pairs(highest_corr_pairs):
     # Running ADF test
     adf_list = []
+    m = len(highest_corr_pairs)
+
+    print_progress_bar(0, total=m, length=50)
+
     for n in range(len(highest_corr_pairs)):
         result = adf_test(highest_corr_pairs['Stock_1'][n], highest_corr_pairs['Stock_2'][n])
         adf_list.append(result)
+
+        time.sleep(0.1)
+        print_progress_bar(iteration=n + 1, total=m, length=50)
 
     return adf_list

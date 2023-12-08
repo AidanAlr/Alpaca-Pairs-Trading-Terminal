@@ -1,23 +1,10 @@
-from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import coint
-from statsmodels.tsa.stattools import adfuller
-import seaborn as sn
-import matplotlib.pyplot as plt
-import statsmodels.api as sm
-import datetime as dt
 import yfinance as yf
 import pandas as pd
-import numpy as np
-from scipy import stats
-import websocket
-import json
-import time
-from datetime import datetime
-import sys
-
 from Analysis import StatisticalMethods
 from Analysis.Dates import Dates
-from MyTimer import timeit
+from utils.MyTimer import timeit
+from utils.ProgressBar import print_progress_bar
 pd.set_option('mode.chained_assignment', None)
 
 
@@ -32,10 +19,9 @@ class StockData:
         self.coint_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(self.coint_correlation_combined_df)
         self.most_suitable_pair = self.find_most_suitable_pair()
 
-
-
     @timeit
     def download_stock_data(self, asset_list: list):
+        print("Starting data download...")
         # Setting dataset for the model
         end = Dates.END_DATE.value
         start = Dates.START_DATE.value
@@ -61,8 +47,11 @@ class StockData:
     def find_cointegrated_pairs(self, df, p_value_thresh):
         n = len(df.columns)
         coint_pairs_dict = {}
+
+        print_progress_bar(0, n, length=50)
         for i in range(n):
             for j in range(i + 1, n):
+                print_progress_bar(i + 1, n, length=50)
                 S1 = df.iloc[:, i]
                 S2 = df.iloc[:, j]
                 result = coint(S1, S2, trend="c", autolag="BIC")
