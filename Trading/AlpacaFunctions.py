@@ -23,8 +23,8 @@ def connect_to_trading_stream():
 
 class AlpacaClient:
     def __init__(self):
-        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
         self.connected = False
+        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
         self.positions = self.client.get_all_positions()
         self.in_position = bool(self.client.get_all_positions())
         self.positions_df = self.get_positions_df()
