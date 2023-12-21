@@ -14,7 +14,6 @@ def pause_algo():
 
 def execute_algo(tp, sl):
     alpaca = AlpacaClient()
-    alpaca.print_positions()
     alpaca.use_live_tp_sl(tp, sl)
 
 

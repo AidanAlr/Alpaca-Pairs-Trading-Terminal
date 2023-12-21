@@ -12,11 +12,11 @@ class StockData:
     def __init__(self, asset_list):
         self.price_history_df = self.download_stock_data(asset_list)
         self.highest_corr_pairs_df = self.find_highest_corr_pairs(self.price_history_df)
-        self.cointegrated_pairs_df = self.find_cointegrated_pairs(self.price_history_df, p_value_thresh=0.05)
-        self.coint_correlation_combined_df = self.combine_cointegration_correlation()
+        self.co_integrated_pairs_df = self.find_cointegrated_pairs(self.price_history_df, p_value_thresh=0.05)
+        self.co_int_correlation_combined_df = self.combine_cointegration_correlation()
 
         # Adding the results of AD fuller to pairs_df
-        self.coint_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(self.coint_correlation_combined_df)
+        self.co_int_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(self.co_int_correlation_combined_df)
         self.most_suitable_pair = self.find_most_suitable_pair()
 
     @timeit
@@ -54,10 +54,10 @@ class StockData:
                 print_progress_bar(i + 1, n, length=50)
                 S1 = df.iloc[:, i]
                 S2 = df.iloc[:, j]
-                result = coint(S1, S2, trend="c", autolag="BIC")
-                pvalue = round(result[1], 5)
-                if pvalue <= p_value_thresh:
-                    coint_pairs_dict[f"{df.columns[i]} - {df.columns[j]}"] = pvalue
+                result: tuple = coint(S1, S2, trend="c", autolag="BIC")
+                p_value = round(result[1], 5)
+                if p_value <= p_value_thresh:
+                    coint_pairs_dict[f"{df.columns[i]} - {df.columns[j]}"] = p_value
 
         coint_pairs_df = pd.DataFrame.from_dict(coint_pairs_dict, orient='index').rename(columns={0: 'Cointegration'})
         return coint_pairs_df
@@ -65,14 +65,14 @@ class StockData:
     @timeit
     def combine_cointegration_correlation(self) -> pd.DataFrame:
         # Merge df of coint pairs above the threshold with df of highest correlation pairs
-        coint_corr_data = self.highest_corr_pairs_df.merge(self.cointegrated_pairs_df, left_on='lookup', right_on=self.cointegrated_pairs_df.index)
+        coint_corr_data = self.highest_corr_pairs_df.merge(self.co_integrated_pairs_df, left_on='lookup', right_on=self.co_integrated_pairs_df.index)
         return coint_corr_data
 
     @timeit
     def find_most_suitable_pair(self):
         # Take the pair with the highest correlation in our dataset that meets our cointegration threshold
-        stock_1 = self.coint_correlation_combined_df.iloc[0, 0]
-        stock_2 = self.coint_correlation_combined_df.iloc[0, 1]
+        stock_1 = self.co_int_correlation_combined_df.iloc[0, 0]
+        stock_2 = self.co_int_correlation_combined_df.iloc[0, 1]
         print('Most Suitable Pair: ' + stock_1 + ' ' + stock_2)
         return [stock_1, stock_2]
 

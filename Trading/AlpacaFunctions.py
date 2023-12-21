@@ -99,8 +99,14 @@ class AlpacaClient:
                     PositionSide.LONG: "Long"}
         print("Current Positions:")
         for position in portfolio:
-            print("{} {} shares of {} purchased for {}".format(side_map[position.side], position.qty.replace("-", ""), position.symbol,
-                                                               abs(float(position.cost_basis))))
+            print("{} {} shares of {} purchased for {} current unrealised profit_pc is {}%"
+                  .format(side_map[position.side],
+                          position.qty.replace("-", ""),
+                          position.symbol,
+                          abs(float(position.cost_basis)),
+                          self.get_unrealised_profit_pc()))
+
+
 
     def get_unrealised_profit_pc(self):
         profit = 0
@@ -111,32 +117,48 @@ class AlpacaClient:
             profit += float(position.unrealized_pl)
             cost_basis += float(abs(float(position.cost_basis)))
 
-        return (profit / cost_basis) * 100
+        return round(((profit / cost_basis) * 100), 2)
 
     def take_profit(self, tp):
         if self.get_unrealised_profit_pc() > tp:
-            self.close_all_positions()
-            print("TP executed.")
+            print("Executing orders to take profit...")
+            if self.close_all_positions():
+                print("Took profit")
 
     def stop_loss(self, sl):
         sl = abs(sl) * -1
         if self.get_unrealised_profit_pc() < sl:
-            self.close_all_positions()
-            print("SL executed.")
+            print("Executing orders to stop loss")
+            if self.close_all_positions():
+                print("Stopped Loss")
+
+
 
     def close_all_positions(self):
-        self.client.close_all_positions(cancel_orders=True)
+        # If not able to submit a market order should submit a limit order at current price
+        close_info = self.client.close_all_positions(cancel_orders=True)
+        for order in close_info:
+            order = order.body
+            side_map = {OrderSide.BUY: "buy",
+                        OrderSide.SELL: "sell"}
+            print(f"Attempted to {side_map[order.side]} {order.qty} shares of {order.symbol}. {order.filled_qty} orders filled for "
+                  f"{order.filled_avg_price}")
+            if order.filled_qty == order.qty:
+                return True
+            else:
+                return False
 
     def use_live_tp_sl(self, tp, sl):
         print("Take Profit:" + str(tp) + "%")
         print("Stop Loss:" + str(abs(sl) * -1) + "%")
+        self.print_positions()
         count = 0
         while True:
+            output = f'{count}_Current Profit: {self.get_unrealised_profit_pc()} %'
+            sys.stdout.write("\n")
             self.stop_loss(sl)
             self.take_profit(tp)
-            sys.stdout.write("\r")
-            # sys.stdout.write("\r")
-            sys.stdout.write(str(count) + '_Current Profit: ' + str(self.get_unrealised_profit_pc()) + ' %')
+            sys.stdout.write("\r" + output.ljust(50))  # Overwrite the line with padding
             time.sleep(1)
             sys.stdout.flush()
             count += 1
