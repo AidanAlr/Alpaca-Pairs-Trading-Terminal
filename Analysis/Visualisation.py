@@ -1,5 +1,9 @@
+import sys
+
 import numpy as np
 from matplotlib import pyplot as plt
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+
 
 ax = ('TECK', 'WPM')[['TECK', 'WPM']].plot(
     figsize=(12, 6))  # , title = 'Daily Closing Prices for {} and {}'.format(asset1,asset2))

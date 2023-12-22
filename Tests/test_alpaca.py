@@ -1,5 +1,7 @@
+import sys
 import unittest
 from Trading.AlpacaFunctions import Alpaca
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 
 class TestAlpacaFunctions(unittest.TestCase):

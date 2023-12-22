@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+
 import time
 
 import numpy as np
@@ -6,6 +9,7 @@ from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
 from Analysis.Dates import Dates
+
 from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
 

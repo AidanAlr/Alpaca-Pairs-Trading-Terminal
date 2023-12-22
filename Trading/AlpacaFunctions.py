@@ -1,6 +1,4 @@
 import sys
-sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
-
 import time
 import pandas as pd
 from alpaca.trading import OrderSide, TimeInForce, PositionSide
@@ -8,8 +6,10 @@ from alpaca.trading.client import TradingClient
 from alpaca.trading.stream import TradingStream
 from alpaca.trading.requests import MarketOrderRequest
 import os
+
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+
 from AidanUtils.MyTimer import timeit
-import keyboard
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 

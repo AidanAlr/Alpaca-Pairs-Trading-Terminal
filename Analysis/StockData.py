@@ -6,6 +6,9 @@ from Analysis.Dates import Dates
 from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
 pd.set_option('mode.chained_assignment', None)
+import sys
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+
 
 
 class StockData:
