@@ -36,12 +36,10 @@ class Alpaca:
         and sets up trading stream.
         """
         self.connected = False
-        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX",
-                                             paper=True)
-        self.positions = self.client.get_all_positions()
+        self.account = None
+        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
         self.in_position = bool(self.client.get_all_positions())
-        self.positions_df = self.get_positions_df()
-        self.trading_stream = connect_to_trading_stream()
+        self.positions = self.client.get_all_positions()
 
     @timeit
     def connect_to_alpaca(self, api_key: str, api_secret: str, paper: bool) -> TradingClient:
@@ -60,13 +58,12 @@ class Alpaca:
         """
         try:
             trading_client = TradingClient(api_key, api_secret, paper=paper)
-            account = trading_client.get_account()
-            print('Connected to ALPACA.')
-            print(f'${account.buying_power} is available as buying power.')
+            self.account = trading_client.get_account()
+            print('Connected to Alpaca, buying power is: ' + self.account.buying_power)
             self.connected = True
             return trading_client
         except Exception:
-            print("Issue connecting to ALPACA.")
+            print("Error connecting to Alpaca")
 
     def enter_hedge_position(self, stock_1, stock_2, side, leverage, hr):
         """
@@ -151,23 +148,23 @@ class Alpaca:
     def get_unrealised_profit_pc(self):
         """
         Calculates the percentage of unrealized profit or loss across all positions.
-        Returns the percentage value rounded to two decimal places.
+        Returns the percentage value rounded to three decimal places.
 
         Returns:
         float: The percentage of unrealized profit or loss.
         """
         try:
-            profit = 0
-            cost_basis = 0
-
             portfolio = self.client.get_all_positions()
-            for position in portfolio:
-                profit += float(position.unrealized_pl)
-                cost_basis += float(abs(float(position.cost_basis)))
+            profit = sum([position.unrealized_pl for position in portfolio])
+            cost_basis = sum([position.unrealized_pl for position in portfolio])
 
-            return round(((profit / cost_basis) * 100), 2)
+            if cost_basis == 0:
+                return 0
+
+            return round((profit*100 / cost_basis), 3)
+
         except Exception:
-            return 0
+            pass
 
     def take_profit(self, tp):
         """
@@ -229,7 +226,6 @@ class Alpaca:
         count = 0
         while True:
             output = f'{count}_Current Profit: {self.get_unrealised_profit_pc()} %'
-            sys.stdout.write("\n")
             self.stop_loss(sl)
             self.take_profit(tp)
             sys.stdout.write("\r" + output.ljust(50))  # Overwrite the line with padding
