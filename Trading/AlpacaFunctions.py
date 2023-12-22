@@ -45,7 +45,6 @@ class AlpacaClient:
             print("Issue connecting to ALPACA.")
 
     def enter_hedge_position(self, stock_1, stock_2, side, leverage, hr):
-
         if side == "buy":
             stock_1_side = OrderSide.BUY
             stock_2_side = OrderSide.SELL
@@ -109,15 +108,18 @@ class AlpacaClient:
 
 
     def get_unrealised_profit_pc(self):
-        profit = 0
-        cost_basis = 0
+        try:
+            profit = 0
+            cost_basis = 0
 
-        portfolio = self.client.get_all_positions()
-        for position in portfolio:
-            profit += float(position.unrealized_pl)
-            cost_basis += float(abs(float(position.cost_basis)))
+            portfolio = self.client.get_all_positions()
+            for position in portfolio:
+                profit += float(position.unrealized_pl)
+                cost_basis += float(abs(float(position.cost_basis)))
 
-        return round(((profit / cost_basis) * 100), 2)
+            return round(((profit / cost_basis) * 100), 2)
+        except Exception:
+            return 0
 
     def take_profit(self, tp):
         if self.get_unrealised_profit_pc() > tp:
