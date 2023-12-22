@@ -3,8 +3,8 @@ import yfinance as yf
 import pandas as pd
 from Analysis import StatisticalMethods
 from Analysis.Dates import Dates
-from utils.MyTimer import timeit
-from utils.ProgressBar import print_progress_bar
+from AidanUtils.MyTimer import timeit
+from AidanUtils.ProgressBar import print_progress_bar
 pd.set_option('mode.chained_assignment', None)
 
 

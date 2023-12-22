@@ -1,4 +1,6 @@
 import sys
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+
 import time
 import pandas as pd
 from alpaca.trading import OrderSide, TimeInForce, PositionSide
@@ -6,7 +8,8 @@ from alpaca.trading.client import TradingClient
 from alpaca.trading.stream import TradingStream
 from alpaca.trading.requests import MarketOrderRequest
 import os
-from utils.MyTimer import timeit
+from AidanUtils.MyTimer import timeit
+import keyboard
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 
@@ -20,6 +23,14 @@ def connect_to_trading_stream():
         return TradingStream("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
     except Exception:
         print("Error getting trade stream")
+
+
+def pause_algo(minutes):
+    for remaining in range(minutes * 60 * 60, 0, -1):
+        sys.stdout.write("\r")
+        sys.stdout.write("Paused Algorithm: {:2d} seconds remaining.".format(remaining))
+        sys.stdout.flush()
+        time.sleep(1)
 
 
 class Alpaca:
@@ -37,7 +48,8 @@ class Alpaca:
         """
         self.connected = False
         self.account = None
-        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
+        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX",
+                                             paper=True)
         self.in_position = bool(self.client.get_all_positions())
         self.positions = self.client.get_all_positions()
 
@@ -161,7 +173,7 @@ class Alpaca:
             if cost_basis == 0:
                 return 0
 
-            return round((profit*100 / cost_basis), 3)
+            return round((profit * 100 / cost_basis), 3)
 
         except Exception:
             pass
@@ -225,10 +237,17 @@ class Alpaca:
         self.print_positions()
         count = 0
         while True:
+            # if keyboard.is_pressed('space'):  # Check if space bar is pressed
+            #     print("\nPausing algorithm...")
+            #     pause_algo(10)  # Call the pause_algo method
+            #     break  # Break out of the loop to pause the algorithm
+
             output = f'{count}_Current Profit: {self.get_unrealised_profit_pc()} %'
             self.stop_loss(sl)
             self.take_profit(tp)
             sys.stdout.write("\r" + output.ljust(50))  # Overwrite the line with padding
+            sys.stdout.write("Press space to pause the algorithm")
+
             time.sleep(1)
             sys.stdout.flush()
             count += 1

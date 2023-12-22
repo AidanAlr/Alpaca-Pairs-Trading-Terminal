@@ -6,8 +6,8 @@ from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
 from Analysis.Dates import Dates
-from utils.MyTimer import timeit
-from utils.ProgressBar import print_progress_bar
+from AidanUtils.MyTimer import timeit
+from AidanUtils.ProgressBar import print_progress_bar
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
