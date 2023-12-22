@@ -156,7 +156,7 @@ class Alpaca:
         try:
             portfolio = self.client.get_all_positions()
             profit = sum([position.unrealized_pl for position in portfolio])
-            cost_basis = sum([position.unrealized_pl for position in portfolio])
+            cost_basis = sum([position.cost_basis for position in portfolio])
 
             if cost_basis == 0:
                 return 0
