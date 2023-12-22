@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-ax = downloaded_stockdata('TECK', 'WPM')[['TECK', 'WPM']].plot(
+ax = ('TECK', 'WPM')[['TECK', 'WPM']].plot(
     figsize=(12, 6))  # , title = 'Daily Closing Prices for {} and {}'.format(asset1,asset2))
 ax.set_ylabel("Closing Price")
 ax.grid(True);
