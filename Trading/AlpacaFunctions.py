@@ -10,6 +10,7 @@ from utils.MyTimer import timeit
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 
+
 def connect_to_trading_stream():
     """
     Connects to the Alpaca Trading Stream using predefined API credentials.
@@ -20,12 +21,14 @@ def connect_to_trading_stream():
     except Exception:
         print("Error getting trade stream")
 
+
 class Alpaca:
     """
     Alpaca class to manage trading activities.
     It handles connection to Alpaca API, managing positions, entering hedge positions,
     retrieving and displaying position data, profit calculation, and order management.
     """
+
     def __init__(self):
         """
         Constructor for Alpaca class.
@@ -33,7 +36,8 @@ class Alpaca:
         and sets up trading stream.
         """
         self.connected = False
-        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
+        self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX",
+                                             paper=True)
         self.positions = self.client.get_all_positions()
         self.in_position = bool(self.client.get_all_positions())
         self.positions_df = self.get_positions_df()
@@ -203,7 +207,8 @@ class Alpaca:
         for order in close_info:
             order = order.body
             side_map = {OrderSide.BUY: "buy", OrderSide.SELL: "sell"}
-            print(f"Attempted to {side_map[order.side]} {order.qty} shares of {order.symbol}. {order.filled_qty} orders filled for {order.filled_avg_price}")
+            print(
+                f"Attempted to {side_map[order.side]} {order.qty} shares of {order.symbol}. {order.filled_qty} orders filled for {order.filled_avg_price}")
             if order.filled_qty == order.qty:
                 return True
             else:
