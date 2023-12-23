@@ -62,9 +62,9 @@ def adf_test(stock_1, stock_2):
     adf_result = adfuller(removed_na_df['spread'])[1]
 
     if adf_result <= 0.05:
-        return 'P-Value: ' + str(round(adf_result, 2)) + ' - Passed'
+        return True
     else:
-        return 'P-Value: ' + str(round(adf_result, 2)) + ' - Failed'
+        return False
 
 
 @timeit
