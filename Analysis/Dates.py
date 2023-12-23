@@ -1,4 +1,3 @@
-import sys
 from enum import Enum
 import datetime as dt
 import pandas as pd

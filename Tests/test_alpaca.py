@@ -12,7 +12,6 @@ sys.path.append(root_dir)
 from Trading.AlpacaFunctions import Alpaca
 
 
-
 class TestAlpacaFunctions(unittest.TestCase):
 
     @classmethod
