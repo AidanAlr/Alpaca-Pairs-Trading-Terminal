@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 
@@ -6,11 +7,18 @@ import yfinance as yf
 from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
+
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# If the script is not in the root directory, navigate to the root directory
+root_dir = os.path.dirname(current_dir)
+# Append the root directory to sys.path so that modules can be imported
+sys.path.append(root_dir)
+
 from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
 from Analysis.Dates import Dates
 
-sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
