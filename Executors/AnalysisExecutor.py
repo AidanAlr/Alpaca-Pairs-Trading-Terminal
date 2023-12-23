@@ -1,4 +1,3 @@
-
 import os
 import sys
 
@@ -8,8 +7,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 # Append the root directory to sys.path so that modules can be imported
 sys.path.append(root_dir)
-
-
 
 from Analysis.StockData import StockData
 
