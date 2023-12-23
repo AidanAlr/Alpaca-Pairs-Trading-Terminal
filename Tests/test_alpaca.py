@@ -1,6 +1,8 @@
 import sys
 import unittest
+
 from Trading.AlpacaFunctions import Alpaca
+
 sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 
@@ -14,7 +16,3 @@ class TestAlpacaFunctions(unittest.TestCase):
 
     def test_connection(self):
         self.assertTrue(self.alpaca.connected, 'Failed to connect to alpaca')
-
-
-
-

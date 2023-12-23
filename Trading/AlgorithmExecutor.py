@@ -1,8 +1,4 @@
-import sys
-
 from AlpacaFunctions import Alpaca
-
-sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 
 def execute_algo(tp, sl):

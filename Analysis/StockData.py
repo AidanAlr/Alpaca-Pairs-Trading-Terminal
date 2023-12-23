@@ -1,14 +1,16 @@
-from statsmodels.tsa.stattools import coint
-import yfinance as yf
+import sys
+
 import pandas as pd
-from Analysis import StatisticalMethods
-from Analysis.Dates import Dates
+import yfinance as yf
+from statsmodels.tsa.stattools import coint
+
 from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
-pd.set_option('mode.chained_assignment', None)
-import sys
-sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+from Analysis import StatisticalMethods
+from Analysis.Dates import Dates
 
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
+pd.set_option('mode.chained_assignment', None)
 
 
 class StockData:
@@ -19,7 +21,8 @@ class StockData:
         self.co_int_correlation_combined_df = self.combine_cointegration_correlation()
 
         # Adding the results of AD fuller to pairs_df
-        self.co_int_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(self.co_int_correlation_combined_df)
+        self.co_int_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(
+            self.co_int_correlation_combined_df)
         self.most_suitable_pair = self.find_most_suitable_pair()
 
     @timeit
@@ -68,7 +71,8 @@ class StockData:
     @timeit
     def combine_cointegration_correlation(self) -> pd.DataFrame:
         # Merge df of coint pairs above the threshold with df of highest correlation pairs
-        coint_corr_data = self.highest_corr_pairs_df.merge(self.co_integrated_pairs_df, left_on='lookup', right_on=self.co_integrated_pairs_df.index)
+        coint_corr_data = self.highest_corr_pairs_df.merge(self.co_integrated_pairs_df, left_on='lookup',
+                                                           right_on=self.co_integrated_pairs_df.index)
         return coint_corr_data
 
     @timeit
@@ -78,5 +82,3 @@ class StockData:
         stock_2 = self.co_int_correlation_combined_df.iloc[0, 1]
         print('Most Suitable Pair: ' + stock_1 + ' ' + stock_2)
         return [stock_1, stock_2]
-
-
