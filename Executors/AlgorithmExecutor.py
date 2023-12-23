@@ -1,6 +1,5 @@
 import os
 import sys
-import unittest
 
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,13 +11,9 @@ sys.path.append(root_dir)
 from Trading.AlpacaFunctions import Alpaca
 
 
-class TestAlpacaFunctions(unittest.TestCase):
+def execute_algo(tp, sl):
+    alpaca = Alpaca()
+    alpaca.use_live_tp_sl(5, 5 )
 
-    @classmethod
-    def setUpClass(cls):
-        """This will only run once when the TestAlpacaFunctions class is created"""
-        # Create an instance of Alpaca
-        cls.alpaca = Alpaca()
 
-    def test_connection(self):
-        self.assertTrue(self.alpaca.connected, 'Failed to connect to alpaca')
+execute_algo(5, 5)
