@@ -1,7 +1,7 @@
 import os
 import sys
-import time
 import threading
+import time
 
 import pandas as pd
 from alpaca.trading import OrderSide, TimeInForce, PositionSide
@@ -12,9 +12,6 @@ from alpaca.trading.stream import TradingStream
 sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 from AidanUtils.MyTimer import timeit
-
-
-
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 
@@ -274,4 +271,3 @@ class Alpaca:
 
         # Optional: Wait for the pause thread to finish if needed
         pause_thread.join()
-
