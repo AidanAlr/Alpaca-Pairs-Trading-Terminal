@@ -39,7 +39,12 @@
 
 ## 📍 Overview
 
-► INSERT-TEXT
+► This Algorithm is separated into Analysis and Trading Functions.
+Analysis contains the statistical methods required to implement a statistical arbitrage strategy.
+Trading contains the methods that interact with the Alpaca API to execute the strategy.  
+The algorithm is configured to use my ALPACA paper account API key and secret.
+
+
 
 ---
 
