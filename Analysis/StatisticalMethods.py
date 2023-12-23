@@ -1,6 +1,4 @@
 import sys
-sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
-
 import time
 
 import numpy as np
@@ -8,10 +6,11 @@ import yfinance as yf
 from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
 
-from Analysis.Dates import Dates
-
 from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
+from Analysis.Dates import Dates
+
+sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
@@ -44,7 +43,8 @@ def collect_metrics_for_pair(stock_1, stock_2):
     stock_data_df['z_score'] = smooth_zscore(stock_data_df['spread'])
 
     # Trading Signal
-    stock_data_df['signal'] = stock_data_df.apply(lambda x: 1 if (x['z_score'] < -1) else (-1 if (x['z_score'] > 1) else 0), axis=1)
+    stock_data_df['signal'] = stock_data_df.apply(
+        lambda x: 1 if (x['z_score'] < -1) else (-1 if (x['z_score'] > 1) else 0), axis=1)
 
     return stock_data_df
 

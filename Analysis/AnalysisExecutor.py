@@ -1,10 +1,13 @@
 import sys
+
 sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 from Analysis.StockData import StockData
 
-SYMBOLS_LIST = ['XOM', 'CVX', 'BP', 'COP', 'PXD', 'EOG', 'APA', 'OXY', 'MPC', 'SLB', 'HAL', 'KMI', 'PBR', 'SU', 'ENB', 'EPD', 'EQT', 'BHP',
-                'FCX', 'NEM', 'GOLD', 'WPM', 'AGI', 'TECK', 'SBSW', 'CF', 'ADM', 'MOS', 'FMC', 'LIN', 'NUE', 'RGLD', 'WY', 'PAA', 'ET',
+SYMBOLS_LIST = ['XOM', 'CVX', 'BP', 'COP', 'PXD', 'EOG', 'APA', 'OXY', 'MPC', 'SLB', 'HAL', 'KMI', 'PBR', 'SU', 'ENB',
+                'EPD', 'EQT', 'BHP',
+                'FCX', 'NEM', 'GOLD', 'WPM', 'AGI', 'TECK', 'SBSW', 'CF', 'ADM', 'MOS', 'FMC', 'LIN', 'NUE', 'RGLD',
+                'WY', 'PAA', 'ET',
                 'MPLX',
                 'WMB', 'X', 'AA', 'CMP', 'IP', 'PKG', 'PPG']
 

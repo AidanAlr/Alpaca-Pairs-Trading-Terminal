@@ -1,9 +1,9 @@
 import sys
+
 sys.path.append("/Users/aidanalrawi/PycharmProjects/Pairs-Trading-Algorithm")
 
 from enum import Enum
 import datetime as dt
-
 import pandas as pd
 
 
