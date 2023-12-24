@@ -145,11 +145,11 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 Please ensure you have the following dependencies installed on your system:
 
-`- ℹ️ Dependency 1`
+`- ℹ️ pandas`
 
-`- ℹ️ Dependency 2`
+`- ℹ️ numpy`
 
-`- ℹ️ ...`
+`- ℹ️ scikit-learn`
 
 ### 🔧 Installation
 
