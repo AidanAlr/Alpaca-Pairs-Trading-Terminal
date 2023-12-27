@@ -10,4 +10,7 @@
   <component name="PackageRequirementsSettings">
     <option name="modifyBaseFiles" value="true" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="16435eb6-b753-416f-b2bc-b76dc185198c" />
+  </component>
 </module>
