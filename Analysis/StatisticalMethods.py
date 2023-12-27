@@ -3,10 +3,10 @@ import sys
 import time
 
 import numpy as np
+import pandas as pd
 import yfinance as yf
 from statsmodels.regression.rolling import RollingOLS
 from statsmodels.tsa.stattools import adfuller
-
 
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +19,14 @@ from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
 from Analysis.Dates import Dates
 
+
+def classify_zscore(df: pd.DataFrame) -> int:
+    if df['z_score'] < -1:
+        return 1
+    elif df['z_score'] > 1:
+        return -1
+    else:
+        return 0
 
 
 def collect_metrics_for_pair(stock_1, stock_2):
@@ -51,8 +59,7 @@ def collect_metrics_for_pair(stock_1, stock_2):
     stock_data_df['z_score'] = smooth_zscore(stock_data_df['spread'])
 
     # Trading Signal
-    stock_data_df['signal'] = stock_data_df.apply(
-        lambda x: 1 if (x['z_score'] < -1) else (-1 if (x['z_score'] > 1) else 0), axis=1)
+    stock_data_df['signal'] = stock_data_df.apply(classify_zscore, axis=1)
 
     return stock_data_df
 

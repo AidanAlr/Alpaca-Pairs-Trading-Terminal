@@ -6,45 +6,28 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 # Append the root directory to sys.path so that modules can be imported
 sys.path.append(root_dir)
+
 import numpy as np
 from matplotlib import pyplot as plt
-from Analysis import StatisticalMethods
-from Analysis.StockData import StockData
-
-# # In order to perform analysis from here and import the most suitable pair
-# SYMBOLS_LIST = ['XOM', 'CVX', 'BP', 'COP', 'PXD', 'EOG', 'APA', 'OXY', 'MPC', 'SLB', 'HAL', 'KMI', 'PBR', 'SU', 'ENB',
-#                 'EPD', 'EQT', 'BHP',
-#                 'FCX', 'NEM', 'GOLD', 'WPM', 'AGI', 'TECK', 'SBSW', 'CF', 'ADM', 'MOS', 'FMC', 'LIN', 'NUE', 'RGLD',
-#                 'WY', 'PAA', 'ET',
-#                 'MPLX',
-#                 'WMB', 'X', 'AA', 'CMP', 'IP', 'PKG', 'PPG']
-# stock_data = StockData(SYMBOLS_LIST)
-# most_suitable_pair = stock_data.find_most_suitable_pair()
-
-# Otherwise just state pair here 
-most_suitable_pair = ['EPD', 'PAA']
-
-# Get DF using function in StatisticalMethods.py
-stock_data_df = StatisticalMethods.collect_metrics_for_pair(most_suitable_pair[0], most_suitable_pair[1])
+from Analysis.StatisticalMethods import classify_zscore, collect_metrics_for_pair
 
 
-def plot_tickers(df):
-    # Plot closing prices over time for each stock
-    plt.plot(df.index, df.iloc[:, 0], label ='Stock 1: ' + df.columns[0])
-    plt.plot(df.index, df.iloc[:, 1], label ='Stock 2: ' + df.columns[1])
 
-    plt.title('Stock Pair Closing Prices Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Price ($)')
-
-    plt.legend()
-    plt.show()
+def get_tickers_from_collected_data_df(df):
+    tickers = []
+    for column in df.columns:
+        if column.endswith('_forward_return'):
+            tickers.append(column.split('_')[0])
+    return tickers[0], tickers[1]
 
 
 def spread_visualisation(df):
-    #Plot spread of the pair over time
-    plt.title(df.columns[0] + '-' + df.columns[1] + ' ' + 'Spread')
+    stock_1, stock_2 = get_tickers_from_collected_data_df(df)
+    hedge_ratio = round(df['hedge_ratio'].iloc[-1], 2)
+    plt.title(f'{stock_1}-{hedge_ratio}*{stock_2}')
+
     df['spread'].plot(figsize=(16, 4), color='red')
+    plt.show()
 
     plt.show()
 
@@ -55,25 +38,21 @@ def zscored_spread(df):
     plt.title('Z-scored Spread')
     plt.axhline(1, color='k')
     plt.axhline(-1, color='k')
-
     plt.show()
 
 
-def visualise_returns(df):
-    tp = df.columns[0]
-    sl = df.columns[1]
-    df = df.dropna()
-    df['combined_return'] = df[f'stock1_return'] + df[f'stock2_return']
+def visualise_returns(df, tp, sl):
     # Trading Signal
+    df['signal'] = df.apply(check_strategy_signal, axis=1)
+    stock_1, stock_2 = get_tickers_from_collected_data_df(df)
+    df['strategy_return'] = df[f'{stock_1}_forward_return'] * df['signal'] + \
+                            df[f'{stock_2}_forward_return'] * df['signal'] * -df['hedge_ratio']
     df['signal'] = df.apply(lambda x: 1 if ((x['z_score'] < -1) or (x['combined_return'] > tp))
     else (-1 if ((x['zscored'] > 1) or (x['combined_return'] < sl)) else 0), axis=1)
     df['strategy_return'] = df[f'stock1_forward_return'] * df['signal'] + \
                             df[f'stock2_forward_return'] * df['signal'] * -df['hedge_ratio']
 
-    portfolios_cumulative_return = np.exp(np.log1p(df['strategy_return']).cumsum())
-    portfolios_cumulative_return.plot(figsize=(16, 6), color='red')
-    plt.title('Strategy Cumulative Returns')
-    plt.ylabel('Return')
-    plt.show()
 
-plot_tickers(stock_data_df)
+
+df_1 = collect_metrics_for_pair('AAPL', 'MSFT')
+visualise_returns(df_1, 0.05, -0.05)
