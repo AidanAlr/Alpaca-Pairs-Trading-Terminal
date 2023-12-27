@@ -6,10 +6,10 @@ import yfinance as yf
 from statsmodels.tsa.stattools import coint
 
 # Get the directory of the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
 # If the script is not in the root directory, navigate to the root directory
-root_dir = os.path.dirname(current_dir)
 # Append the root directory to sys.path so that modules can be imported
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 from AidanUtils.MyTimer import timeit
@@ -59,7 +59,7 @@ class StockData:
     @timeit
     def find_cointegrated_pairs(self, df, p_value_thresh):
         n = len(df.columns)
-        coint_pairs_dict = {}
+        cointegrated_pairs_dict = {}
 
         print_progress_bar(0, n, length=50)
         for i in range(n):
@@ -67,13 +67,15 @@ class StockData:
                 print_progress_bar(i + 1, n, length=50)
                 S1 = df.iloc[:, i]
                 S2 = df.iloc[:, j]
-                result: tuple = coint(S1, S2, trend="c", autolag="BIC")
+                result = coint(S1, S2, trend="c", autolag="BIC")
                 p_value = round(result[1], 5)
                 if p_value <= p_value_thresh:
-                    coint_pairs_dict[f"{df.columns[i]} - {df.columns[j]}"] = p_value
+                    cointegrated_pairs_dict[f"{df.columns[i]} - {df.columns[j]}"] = p_value
 
-        coint_pairs_df = pd.DataFrame.from_dict(coint_pairs_dict, orient='index').rename(columns={0: 'Cointegration'})
-        return coint_pairs_df
+        cointegrated_pairs_df = (pd.DataFrame.from_dict(cointegrated_pairs_dict, orient='index')
+                                 .rename(columns={0: 'Cointegration'}))
+
+        return cointegrated_pairs_df
 
     @timeit
     def combine_cointegration_correlation(self) -> pd.DataFrame:
