@@ -1,5 +1,6 @@
 import os
 import sys
+
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # If the script is not in the root directory, navigate to the root directory
@@ -12,8 +13,7 @@ from matplotlib import pyplot as plt
 from Analysis.StatisticalMethods import classify_zscore, collect_metrics_for_pair
 
 
-
-def get_tickers_from_collected_data_df(df):
+def get_tickers_from_collected_data_df(df) -> (str, str):
     tickers = []
     for column in df.columns:
         if column.endswith('_forward_return'):
@@ -29,8 +29,6 @@ def spread_visualisation(df):
     df['spread'].plot(figsize=(16, 4), color='red')
     plt.show()
 
-    plt.show()
-
 
 def zscored_spread(df):
     # Plot Z-scored spread
@@ -42,17 +40,28 @@ def zscored_spread(df):
 
 
 def visualise_returns(df, tp, sl):
+    stock_1, stock_2 = get_tickers_from_collected_data_df(df)
+    df = df.dropna()
+    df['combined_return'] = df[f'{stock_1}_return'] + df[f'{stock_2}_return'] * df['hedge_ratio']
+
+    def check_strategy_signal(df):
+        if df['combined_return'] > tp or df['z_score'] < -1:
+            return 1
+        elif df['combined_return'] < sl or df['z_score'] > 1:
+            return -1
+        else:
+            return 0
+
     # Trading Signal
     df['signal'] = df.apply(check_strategy_signal, axis=1)
-    stock_1, stock_2 = get_tickers_from_collected_data_df(df)
     df['strategy_return'] = df[f'{stock_1}_forward_return'] * df['signal'] + \
                             df[f'{stock_2}_forward_return'] * df['signal'] * -df['hedge_ratio']
-    df['signal'] = df.apply(lambda x: 1 if ((x['z_score'] < -1) or (x['combined_return'] > tp))
-    else (-1 if ((x['zscored'] > 1) or (x['combined_return'] < sl)) else 0), axis=1)
-    df['strategy_return'] = df[f'stock1_forward_return'] * df['signal'] + \
-                            df[f'stock2_forward_return'] * df['signal'] * -df['hedge_ratio']
 
-
+    portfolios_cumulative_return = np.exp(np.log1p(df['strategy_return']).cumsum())
+    portfolios_cumulative_return.plot(figsize=(16, 6), color='red')
+    plt.title('Strategy Cumulative Returns')
+    plt.ylabel('Return')
+    plt.show()
 
 df_1 = collect_metrics_for_pair('AAPL', 'MSFT')
 visualise_returns(df_1, 0.05, -0.05)
