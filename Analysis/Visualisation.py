@@ -13,6 +13,7 @@ from matplotlib import pyplot as plt
 from Analysis.StatisticalMethods import classify_zscore, collect_metrics_for_pair
 
 
+
 def get_tickers_from_collected_data_df(df) -> (str, str):
     tickers = []
     for column in df.columns:
@@ -25,15 +26,13 @@ def spread_visualisation(df):
     stock_1, stock_2 = get_tickers_from_collected_data_df(df)
     hedge_ratio = round(df['hedge_ratio'].iloc[-1], 2)
     plt.title(f'{stock_1}-{hedge_ratio}*{stock_2}')
-
     df['spread'].plot(figsize=(16, 4), color='red')
     plt.show()
 
 
 def zscored_spread(df):
-    # Plot Z-scored spread
-    df['z_score'].plot(figsize=(16, 4), color='orange')
-    plt.title('Z-scored Spread')
+    df['zscored'].plot(figsize=(16, 4), color='orange')
+    plt.title('Zscored Spread')
     plt.axhline(1, color='k')
     plt.axhline(-1, color='k')
     plt.show()
