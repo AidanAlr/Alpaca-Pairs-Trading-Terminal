@@ -102,7 +102,7 @@ class Alpaca:
 
         try:
             # Placing market orders for both stocks
-            market_order = self.client.submit_order(
+            self.client.submit_order(
                 order_data=MarketOrderRequest(
                     symbol=stock_1,
                     qty=1 * leverage,
@@ -111,7 +111,7 @@ class Alpaca:
                 ))
             print(stock_1 + ' ' + stock_1_side + ' order executed')
 
-            market_order_2 = self.client.submit_order(
+            self.client.submit_order(
                 order_data=MarketOrderRequest(
                     symbol=stock_2,
                     qty=round(hr * leverage),
@@ -119,6 +119,7 @@ class Alpaca:
                     time_in_force=TimeInForce.DAY
                 ))
             print(stock_2 + ' ' + stock_2_side + ' order executed')
+
         except Exception:
             print("Error entering hedge position")
 
