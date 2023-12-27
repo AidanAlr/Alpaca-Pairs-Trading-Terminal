@@ -63,5 +63,6 @@ def visualise_returns(df, tp, sl):
     plt.ylabel('Return')
     plt.show()
 
+
 df_1 = collect_metrics_for_pair('PAA', 'PBR')
 visualise_returns(df_1, 0.05, -0.05)
