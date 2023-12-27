@@ -1,5 +1,6 @@
 import os
 import sys
+
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # If the script is not in the root directory, navigate to the root directory
@@ -12,7 +13,8 @@ from matplotlib import pyplot as plt
 from Analysis.StatisticalMethods import classify_zscore, collect_metrics_for_pair
 
 
-def get_tickers_from_collected_data_df(df):
+
+def get_tickers_from_collected_data_df(df) -> (str, str):
     tickers = []
     for column in df.columns:
         if column.endswith('_forward_return'):
@@ -59,7 +61,6 @@ def visualise_returns(df, tp, sl):
     plt.title('Strategy Cumulative Returns')
     plt.ylabel('Return')
     plt.show()
-
 
 df_1 = collect_metrics_for_pair('AAPL', 'MSFT')
 visualise_returns(df_1, 0.05, -0.05)
