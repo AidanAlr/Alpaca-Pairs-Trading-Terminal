@@ -19,17 +19,7 @@ from AidanUtils.MyTimer import timeit
 from AidanUtils.ProgressBar import print_progress_bar
 from Analysis.Dates import Dates
 
-
-def classify_zscore(df: pd.DataFrame) -> int:
-    if df['z_score'] < -1:
-        return 1
-    elif df['z_score'] > 1:
-        return -1
-    else:
-        return 0
-
-
-def collect_metrics_for_pair(stock_1, stock_2):
+def collect_metrics_for_pair(stock_1, stock_2) -> pd.DataFrame:
     # Downloading the required data
     stock_data_df = yf.download(tickers=[stock_1, stock_2], start=Dates.START_DATE.value, end=Dates.END_DATE.value)
     stock_data_df = stock_data_df.stack()
@@ -58,13 +48,21 @@ def collect_metrics_for_pair(stock_1, stock_2):
 
     stock_data_df['z_score'] = smooth_zscore(stock_data_df['spread'])
 
+    def classify_zscore(df: pd.DataFrame) -> int:
+        if df['z_score'] < -1:
+            return 1
+        elif df['z_score'] > 1:
+            return -1
+        else:
+            return 0
+
     # Trading Signal
     stock_data_df['signal'] = stock_data_df.apply(classify_zscore, axis=1)
 
     return stock_data_df
 
 
-def adf_test(stock_1, stock_2):
+def adf_test(stock_1, stock_2) -> bool:
     removed_na_df = collect_metrics_for_pair(stock_1, stock_2).dropna()
     adf_result = adfuller(removed_na_df['spread'])[1]
 
@@ -75,7 +73,7 @@ def adf_test(stock_1, stock_2):
 
 
 @timeit
-def run_adf_on_best_pairs(highest_corr_pairs):
+def run_adf_on_best_pairs(highest_corr_pairs) -> list:
     # Running ADF test
     adf_list = []
     m = len(highest_corr_pairs)

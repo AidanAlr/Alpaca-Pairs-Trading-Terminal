@@ -10,7 +10,7 @@ sys.path.append(root_dir)
 
 import numpy as np
 from matplotlib import pyplot as plt
-from Analysis.StatisticalMethods import classify_zscore, collect_metrics_for_pair
+from Analysis.StatisticalMethods import collect_metrics_for_pair
 
 
 def get_tickers_from_collected_data_df(df) -> (str, str):
