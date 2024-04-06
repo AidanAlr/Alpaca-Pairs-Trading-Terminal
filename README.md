@@ -196,7 +196,6 @@ pip install -r requirements.txt
 ```sh
 add account details to trading/account_details.py
 ```
-4. 
 
 ### 🤖 Running Program
 1. Change to the Executors directory:
@@ -209,6 +208,8 @@ python -m cli_controller
 
 
 ---
+### 🤖 Running Program with docker
+This program can also be run as a container using the provided dockerfile. Simply create a new image using this dockerfile and run the container.
 
 
 ---
