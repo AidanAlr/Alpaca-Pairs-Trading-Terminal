@@ -1,0 +1,9 @@
+seaborn
+matplotlib
+statsmodels
+yfinance
+pandas
+numpy
+websocket-client
+scipy
+alpaca-py
