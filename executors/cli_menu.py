@@ -1,30 +1,22 @@
 import os
 import sys
-
-# Get the directory of the current script
-# If the script is not in the root directory, navigate to the root directory
-# Append the root directory to sys.path so that modules can be imported
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
-sys.path.append(root_dir)
-
-# Get the directory of the current script
-# If the script is not in the root directory, navigate to the root directory
-# Append the root directory to sys.path so that modules can be imported
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
-sys.path.append(root_dir)
-
 from trading.alpaca_functions import Alpaca
-from utils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print, emphasis_bold_red_print
+from utils.formatting_and_logs import (
+    green_bold_print,
+    blue_bold_print,
+    red_bold_print,
+    emphasis_bold_red_print,
+)
 from executors import analysis_executor
 from executors import alpaca_executor
 
 
 def main_menu(alpaca: Alpaca) -> str:
-    """ Displays the main menu and returns the user's choice. """
+    """Displays the main menu and returns the user's choice."""
     sys.stdout.write("\n")
-    emphasis_bold_red_print("Main Menu | " + "Alpaca Balance: $" + str(alpaca.account.buying_power))
+    emphasis_bold_red_print(
+        "Main Menu | " + "Alpaca Balance: $" + str(alpaca.account.buying_power)
+    )
     blue_bold_print("1: Current Positions - Live Portfolio")
     blue_bold_print("2: Run analysis - Find Suitable Pair")
     blue_bold_print("3: Execute pairs trading strategy")
@@ -37,7 +29,7 @@ def main_menu(alpaca: Alpaca) -> str:
 
 
 def main():
-    """ Main function for the CLI controller. """
+    """Main function for the CLI controller."""
     alpaca_connection = Alpaca()
     while True:
         try:

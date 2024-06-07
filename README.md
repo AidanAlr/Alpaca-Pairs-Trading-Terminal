@@ -97,7 +97,7 @@ Option to quickly exit all positions.
     ├── executors/
     │   ├── alpaca_executor.py
     │   ├── analysis_executor.py
-    │   └── cli_controller.py
+    │   └── cli_menu.py
     ├── trading/
     │   ├── account_details.py
     │   └── alpaca_functions.py

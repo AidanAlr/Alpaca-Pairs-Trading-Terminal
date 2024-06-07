@@ -2,14 +2,6 @@ import os
 import sys
 
 from utils.formatting_and_logs import blue_bold_print
-
-# Get the directory of the current script
-# If the script is not in the root directory, navigate to the root directory
-# Append the root directory to sys.path so that modules can be imported
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
-sys.path.append(root_dir)
-
 from trading.alpaca_functions import Alpaca, get_asset_price
 
 
@@ -74,7 +66,9 @@ def limit_trade_menu(symbol, qty, side, alpaca):
             limit_price = float(limit_price)
             break
 
-    blue_bold_print("Would you like to add a take profit/stop loss to your order? (y/n)")
+    blue_bold_print(
+        "Would you like to add a take profit/stop loss to your order? (y/n)"
+    )
     tp_sl_choice = input()
     if tp_sl_choice.lower() == "y":
         blue_bold_print("Please enter the take profit gain (Enter 1.05 for 5% tp) : ")
@@ -84,6 +78,8 @@ def limit_trade_menu(symbol, qty, side, alpaca):
         sl = input()
         sl_price = limit_price * float(sl)
 
-        alpaca.send_limit_order(symbol, qty, side, limit_price, stop_loss=sl_price, take_profit=tp_price)
+        alpaca.send_limit_order(
+            symbol, qty, side, limit_price, stop_loss=sl_price, take_profit=tp_price
+        )
     else:
         alpaca.send_limit_order(symbol, qty, side, limit_price)

@@ -2,22 +2,10 @@ import os
 import sys
 import time
 import logging
-
-import alpaca
 import yfinance
 from alpaca.data import StockLatestQuoteRequest
-
-from trading import account_details
 from utils.countdown import countdown
 from utils.formatting_and_logs import green_bold_print, red_bold_print, blue_bold_print
-
-# Get the directory of the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# If the script is not in the root directory, navigate to the root directory
-root_dir = os.path.dirname(current_dir)
-# Append the root directory to sys.path so that modules can be imported
-sys.path.append(root_dir)
-
 import pandas as pd
 from alpaca.trading import OrderSide, TimeInForce, PositionSide, Position
 from alpaca.trading.client import TradingClient
@@ -26,10 +14,12 @@ from alpaca.trading.stream import TradingStream
 from trading.account_details import AccountDetails
 from alpaca.data.historical import StockHistoricalDataClient
 
-os.environ['APCA_API_BASE_URL'] = AccountDetails.BASE_URL.value
+os.environ["APCA_API_BASE_URL"] = AccountDetails.BASE_URL.value
 
 # Configure the logging; you can adjust the level and format as needed
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 def connect_to_trading_stream():
@@ -38,14 +28,18 @@ def connect_to_trading_stream():
     Returns a TradingStream object if successful, else prints an error message.
     """
     try:
-        return TradingStream(AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value, paper=True)
+        return TradingStream(
+            AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value, paper=True
+        )
     except Exception as e:
         logging.error(e)
 
 
 def pause_algo(seconds):
     for remaining in range(seconds, 0, -1):
-        sys.stdout.write("\r" + "Paused Algorithm: {:2d} seconds remaining.".format(remaining))
+        sys.stdout.write(
+            "\r" + "Paused Algorithm: {:2d} seconds remaining.".format(remaining)
+        )
         time.sleep(1)
 
 
@@ -60,7 +54,9 @@ def get_asset_price(symbol: str) -> float:
 
     symbol = symbol.upper()
     # no keys required
-    client = StockHistoricalDataClient("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX")
+    client = StockHistoricalDataClient(
+        "PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX"
+    )
 
     # single symbol request
     request_params = StockLatestQuoteRequest(symbol_or_symbols=symbol)
@@ -70,7 +66,12 @@ def get_asset_price(symbol: str) -> float:
     # must use symbol to access even though it is single symbol
     price = latest_quote[symbol].ask_price
     if price == 0:
-        price = round(yfinance.download(tickers=symbol, period="1d", interval="1m")['Adj Close'].iloc[-1],2)
+        price = round(
+            yfinance.download(tickers=symbol, period="1d", interval="1m")[
+                "Adj Close"
+            ].iloc[-1],
+            2,
+        )
 
     return price
 
@@ -89,13 +90,16 @@ class Alpaca:
         and sets up trading stream.
         """
         self.connected = False
-        self.client = self.connect_to_alpaca(AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value,
-                                             paper=True)
+        self.client = self.connect_to_alpaca(
+            AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value, paper=True
+        )
         self.in_position = bool(self.client.get_all_positions())
         self.positions = self.client.get_all_positions()
         self.balance = self.account.buying_power
 
-    def connect_to_alpaca(self, api_key: str, api_secret: str, paper: bool) -> TradingClient:
+    def connect_to_alpaca(
+        self, api_key: str, api_secret: str, paper: bool
+    ) -> TradingClient:
         """
         Establishes a connection to the Alpaca trading service using API credentials.
         If successful, prints the connection status and available buying power.
@@ -112,7 +116,9 @@ class Alpaca:
         try:
             trading_client = TradingClient(api_key, api_secret, paper=paper)
             self.account = trading_client.get_account()
-            logging.info('Connected to Alpaca, buying power is: $' + self.account.buying_power)
+            logging.info(
+                "Connected to Alpaca, buying power is: $" + self.account.buying_power
+            )
             self.connected = True
             return trading_client
 
@@ -135,16 +141,25 @@ class Alpaca:
                     symbol=symbol.upper(),
                     qty=qty,
                     side=side,
-                    time_in_force=TimeInForce.DAY
-                ))
-            red_bold_print("Market order: {} {} shares of {} - EXECUTED AT ${}".format(side,
-                                                                                       qty,
-                                                                                       symbol.upper(),
-                                                                                       get_asset_price(symbol)))
+                    time_in_force=TimeInForce.DAY,
+                )
+            )
+            red_bold_print(
+                "Market order: {} {} shares of {} - EXECUTED AT ${}".format(
+                    side, qty, symbol.upper(), get_asset_price(symbol)
+                )
+            )
         except Exception as e:
             print(e)
 
-    def send_limit_order(self, symbol: str, qty: int | float, side: OrderSide | str, limit_price: float, **kwargs):
+    def send_limit_order(
+        self,
+        symbol: str,
+        qty: int | float,
+        side: OrderSide | str,
+        limit_price: float,
+        **kwargs,
+    ):
         """
         Sends a limit order to the Alpaca API.
 
@@ -165,11 +180,16 @@ class Alpaca:
                     qty=qty,
                     side=side,
                     limit_price=limit_price,
-                    take_profit=kwargs.get('take_profit', None),
-                    stop_loss=kwargs.get('stop_loss', None),
-                    time_in_force=TimeInForce.DAY
-                ))
-            logging.info("Limit order placed for {} shares of {} at {}".format(qty, symbol, limit_price))
+                    take_profit=kwargs.get("take_profit", None),
+                    stop_loss=kwargs.get("stop_loss", None),
+                    time_in_force=TimeInForce.DAY,
+                )
+            )
+            logging.info(
+                "Limit order placed for {} shares of {} at {}".format(
+                    qty, symbol, limit_price
+                )
+            )
 
         except Exception as e:
             red_bold_print(e)
@@ -189,17 +209,25 @@ class Alpaca:
         stock_2_side = None
         if side == "buy":
             stock_2_side = OrderSide.SELL
-            logging.info("This position will purchase {} shares of {} and short {} shares of {} "
-                         .format(leverage, stock_1, hr * leverage, stock_2))
+            logging.info(
+                "This position will purchase {} shares of {} and short {} shares of {} ".format(
+                    leverage, stock_1, hr * leverage, stock_2
+                )
+            )
         elif side == "sell":
             stock_2_side = OrderSide.BUY
-            logging.info("This position will short {} shares of {} and purchase {} shares of {} "
-                         .format(leverage, stock_1, hr * leverage, stock_2))
+            logging.info(
+                "This position will short {} shares of {} and purchase {} shares of {} ".format(
+                    leverage, stock_1, hr * leverage, stock_2
+                )
+            )
 
         side_map = {OrderSide.BUY: "buy", OrderSide.SELL: "sell"}
         try:
             self.send_market_order(stock_1, leverage, side)
-            self.send_market_order(stock_2, round(hr * leverage, 2), side_map[stock_2_side])
+            self.send_market_order(
+                stock_2, round(hr * leverage, 2), side_map[stock_2_side]
+            )
             red_bold_print("Hedge position filled!")
         except Exception as e:
             print(e)
@@ -245,12 +273,18 @@ class Alpaca:
         if self.in_position:
             for n in range(len(self.client.get_all_positions())):
                 pos = dict(self.client.get_all_positions()[n])
-                pos = pd.DataFrame.from_dict(pos, orient='index').T
+                pos = pd.DataFrame.from_dict(pos, orient="index").T
                 assets = pd.concat([assets, pos])
 
                 # Changing columns from str to float type
-                columns_to_convert = ['unrealized_pl', 'cost_basis', 'market_value',
-                                      'avg_entry_price', 'qty', 'unrealized_plpc']
+                columns_to_convert = [
+                    "unrealized_pl",
+                    "cost_basis",
+                    "market_value",
+                    "avg_entry_price",
+                    "qty",
+                    "unrealized_plpc",
+                ]
                 for column in columns_to_convert:
                     assets[column] = assets[column].astype(float)
         return assets
@@ -265,12 +299,15 @@ class Alpaca:
         print("Current Positions:")
         if portfolio:
             for position in portfolio:
-                print("{} {} shares of {} purchased for {} current unrealised profit_pc is {}%"
-                      .format(side_map[position.side],
-                              position.qty.replace("-", ""),
-                              position.symbol,
-                              abs(float(position.cost_basis)),
-                              self.get_unrealised_profit_pc()))
+                print(
+                    "{} {} shares of {} purchased for {} current unrealised profit_pc is {}%".format(
+                        side_map[position.side],
+                        position.qty.replace("-", ""),
+                        position.symbol,
+                        abs(float(position.cost_basis)),
+                        self.get_unrealised_profit_pc(),
+                    )
+                )
         else:
             print("No positions")
 
@@ -305,7 +342,9 @@ class Alpaca:
             if cost_basis == 0:
                 return 0
 
-            profit_pc = round((self.get_absolute_unrealised_profit() * 100 / cost_basis), 3)
+            profit_pc = round(
+                (self.get_absolute_unrealised_profit() * 100 / cost_basis), 3
+            )
             return profit_pc
 
         except Exception as e:
@@ -364,7 +403,8 @@ class Alpaca:
                     side_map = {OrderSide.BUY: "buy", OrderSide.SELL: "sell"}
                     print(
                         f"Status: {order.status.value} - Attempted to {side_map[order.side]} {order.qty} shares of {order.symbol}"
-                        f" at ${get_asset_price(order.symbol)}")
+                        f" at ${get_asset_price(order.symbol)}"
+                    )
 
                 countdown(3)
                 self.in_position = bool(self.client.get_all_positions())
@@ -387,16 +427,22 @@ class Alpaca:
                 try:
                     # Format the DataFrame as a table
                     table = self.get_positions_df()
-                    table = table[['symbol', 'side', 'qty', 'avg_entry_price', 'unrealized_pl']]
+                    table = table[
+                        ["symbol", "side", "qty", "avg_entry_price", "unrealized_pl"]
+                    ]
                     curr_time = pd.Timestamp.now().time().strftime("%X")
-                    output = f'{curr_time} Current Profit: {self.get_unrealised_profit_pc()} %'
+                    output = f"{curr_time} Current Profit: {self.get_unrealised_profit_pc()} %"
                     sys.stdout.write("\r" + output + "\n")
                     sys.stdout.write("Positions" + "\n")
                     # Overwrite the line with padding
-                    with pd.option_context('display.max_rows', None,
-                                           'display.max_columns', None,
-                                           'display.precision', 3,
-                                           ):
+                    with pd.option_context(
+                        "display.max_rows",
+                        None,
+                        "display.max_columns",
+                        None,
+                        "display.precision",
+                        3,
+                    ):
                         print(table)
                     time.sleep(3)
                     count -= 3

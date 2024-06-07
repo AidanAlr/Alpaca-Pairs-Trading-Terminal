@@ -1,7 +1,11 @@
+import os
 from enum import Enum
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AccountDetails(Enum):
-    API_KEY: str = "PKNWSWFGL7X6F50PJ8UH"
-    API_SECRET: str = "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX"
-    BASE_URL: str = "https://paper-api.alpaca.markets"
+    API_KEY: str = os.getenv("API_KEY")
+    API_SECRET: str = os.getenv("API_SECRET")
+    BASE_URL: str = os.getenv("BASE_URL")
