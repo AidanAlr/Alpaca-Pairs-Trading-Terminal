@@ -45,13 +45,30 @@ def manual_trade_menu(alpaca: Alpaca):
 
         # Market order input
         elif order_type == "market":
-            market_trade_menu(symbol, qty, side, alpaca)
+            market_trade(symbol, qty, side, alpaca)
 
     except Exception as e:
         print(e)
 
 
-def market_trade_menu(symbol, qty, side, alpaca):
+def terminal_market_trade_menu(symbol, alpaca):
+    blue_bold_print(f"Please enter the side of the trade (buy/sell)?")
+    side = input("->").strip().lower()
+
+    # Validate input for quantity
+    while True:
+        qty = input("Quantity: ")
+        if qty.isnumeric():
+            qty = float(qty)
+            break
+
+    if side in ["b", "buy"]:
+        market_trade(symbol, qty, "buy", alpaca)
+    elif side in ["s", "sell"]:
+        market_trade(symbol, qty, "sell", alpaca)
+
+
+def market_trade(symbol, qty, side, alpaca):
     total_order_cost = get_asset_price(symbol) * qty
     blue_bold_print(f"Total order cost: {round(total_order_cost, 2)}")
     confirm = input("Confirm order (y/n): ")

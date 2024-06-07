@@ -116,9 +116,6 @@ class Alpaca:
         try:
             trading_client = TradingClient(api_key, api_secret, paper=paper)
             self.account = trading_client.get_account()
-            logging.info(
-                "Connected to Alpaca, buying power is: $" + self.account.buying_power
-            )
             self.connected = True
             return trading_client
 
@@ -425,6 +422,8 @@ class Alpaca:
         if self.in_position:
             while count > 0:
                 try:
+                    clear_terminal()
+
                     # Format the DataFrame as a table
                     table = self.get_positions_df()
                     table = table[
@@ -432,8 +431,15 @@ class Alpaca:
                     ]
                     curr_time = pd.Timestamp.now().time().strftime("%X")
                     output = f"{curr_time} Current Profit: {self.get_unrealised_profit_pc()} %"
-                    sys.stdout.write("\r" + output + "\n")
-                    sys.stdout.write("Positions" + "\n")
+
+                    # Move cursor to the beginning of the line
+                    sys.stdout.write("\r")
+                    sys.stdout.write(output)
+                    sys.stdout.flush()
+
+                    # Move cursor to the beginning of the next line to overwrite old text
+                    sys.stdout.write("\n")
+
                     # Overwrite the line with padding
                     with pd.option_context(
                         "display.max_rows",
@@ -444,11 +450,22 @@ class Alpaca:
                         3,
                     ):
                         print(table)
-                    time.sleep(3)
-                    count -= 3
+
+                    time.sleep(1)
+                    count -= 1
 
                 except Exception as e:
                     print(f"An error occurred: {e}")
                     break
+
         else:
             print("No positions to monitor")
+
+
+def clear_terminal():
+    # For Windows
+    if os.name == "nt":
+        _ = os.system("cls")
+    # For Unix/Linux/MacOS
+    else:
+        _ = os.system("clear")
