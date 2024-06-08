@@ -1,8 +1,8 @@
 <div align="center">
 <h1 align="center">
 <img src="" width="100" />
-<br> Stock Analysis Terminal with Pairs Trading Algorithm</h1>
-<h3>◦ Developed to interact with the ALPACA API with the software and tools below.</h3>
+<br> Alpaca Stock Terminal CLI with Pairs Trading Algorithm</h1>
+<h3>◦ Developed to interact with the ALPACA API.</h3>
 
 <p align="center">
 <img src="https://img.shields.io/badge/SciPy-8CAAE6.svg?style=flat-square&logo=SciPy&logoColor=white" alt="SciPy" />
@@ -32,9 +32,7 @@
 
 
 ## 📍 Overview
-This command line interface (CLI) application, developed to interact with the Alpaca API (stock brokerage), allows users to manage and view positions, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy. 
-
-The code is organised in a modular format, with analysis and trading functions in separate directories. Executor files import functions and methods from these classes.
+This command line interface (CLI) application, developed to interact with the Alpaca API (stock brokerage), allows users to manage and view positions, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the cli.
 
 ---
 
@@ -44,7 +42,6 @@ https://private-user-images.githubusercontent.com/112656616/300945934-8416627c-4
 
 
 ---
-
 
 ## 📦 Features
 
@@ -82,101 +79,6 @@ Option to quickly exit all positions.
 
 ---
 
-
-## 📂 Repository Structure
-
-```sh
-└── Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/
-    ├── requirements.txt
-    ├── analysis/
-    │   ├── DATES.py
-    │   ├── errors.py
-    │   ├── statistical_methods.py
-    │   ├── stock_data.py
-    │   └── visualisation.py
-    ├── executors/
-    │   ├── alpaca_executor.py
-    │   ├── analysis_executor.py
-    │   └── cli_menu.py
-    ├── trading/
-    │   ├── account_details.py
-    │   └── alpaca_functions.py
-    └── utils/
-        ├── ProgressBar.py
-        ├── countdown.py
-        ├── formatting_and_logs.py
-        └── my_timer.py
-
-```
-
-
----
-
-
-## ⚙️ Modules
-
-<details closed><summary>Root</summary>
-
-| File                                                                                               | Summary       |
-| ---                                                                                                | ---           |
-| [requirements.txt](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/requirements.txt) | ► Requirements needed to run program, use "pip install -r requirements.txt" |
-
-</details>
-
-<details closed><summary>Analysis</summary>
-
-| File                                                                                                                                                 | Summary                   |
-| ---                                                                                                                                                  | ---                       |
-| [statistical_methods.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/analysis/statistical_methods.py) | ► Functions to visualise important metrics |
-| [visualisation.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/analysis/visualisation.py)             | ► Functions to visualise important metrics |
-| [DATES.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/analysis/DATES.py)                             | ► StockData class and methods |
-| [errors.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/analysis/errors.py)                           | ► Enum for dates |
-| [stock_data.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/analysis/stock_data.py)                   | ► Functions performing statisticaly analysis on StockData |
-
-
-</details>
-
-<details closed><summary>Tests</summary>
-
-| File                                                                                                 | Summary       |
-| ---                                                                                                  | ---           |
-| [test_alpaca.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Tests/test_alpaca.py) | ► Testing the Alpaca Functions |
-
-</details>
-
-<details closed><summary>Executors</summary>
-
-| File                                                                                                                                              | Summary                   |
-| ---                                                                                                                                               | ---                       |
-| [cli_controller.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/executors/cli_controller.py)       | ► Main entry point into program - main_menu handler |
-| [alpaca_executor.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/executors/alpaca_executor.py)     | ► Executor for trading functions |
-| [analysis_executor.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/executors/analysis_executor.py) | ► Executor for analysis functions |
-
-</details>
-
-<details closed><summary>Aidanutils</summary>
-| File                                                                                                                                              | Summary                   |
-| ---                                                                                                                                               | ---                       |
-| [my_timer.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/utils/my_timer.py)                       | ► Timer decorator for functions |
-| [formatting_and_logs.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/utils/formatting_and_logs.py) | ► Log helper |
-| [ProgressBar.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/utils/ProgressBar.py)                 | ► Progress bar printer |
-| [countdown.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/utils/countdown.py)                     | ► Countdown function | 
-
-</details>
-
-<details closed><summary>Trading</summary>
-
-| File                                                                                                                                          | Summary                   |
-| ---                                                                                                                                           | ---                       |
-| [alpaca_functions.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/trading/alpaca_functions.py) | ► Interact with ALPACA API |
-| [account_details.py](https://github.com/AidanAlr/Stock-Analysis-Terminal-with-Pairs-Trading-Algorithm/blob/main/trading/account_details.py)   | ► Account details enum for user input |
-
-</details>
-
----
-
-## 🚀 Getting Started
-
 ### 🔧 Installation
 
 1. Clone the Pairs-Trading-Algorithm repository:
@@ -194,7 +96,7 @@ cd Pairs-trading-Algorithm
 pip install -r requirements.txt
 ```
 ```sh
-add account details to trading/account_details.py
+add account details to trading .FAKENV and change to .env
 ```
 
 ### 🤖 Running Program
