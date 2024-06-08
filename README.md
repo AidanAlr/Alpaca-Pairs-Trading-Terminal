@@ -100,14 +100,19 @@ add account details to trading .FAKENV and change to .env
 ```
 
 ### 🤖 Running Program
-1. Change to the Executors directory:
+
+Change to the directory containing the cloned repository.
+Open the terminal in this folder.
+
+Enter to see a list of command line arguments:
 ```sh
-cd Pairs-trading-Algorithm/executors
-```
-```sh
-python -m cli_controller
+python terminal.py -h
 ```
 
+To interact with the terminal through an interactive menu:
+```sh
+python terminal.py -s
+```
 
 ---
 ### 🤖 Running Program with docker
