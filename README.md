@@ -18,7 +18,8 @@
 
 
 ## 📍 Overview
-This command line interface (CLI) application, developed to interact with the Alpaca API (stock brokerage), allows users to manage and view positions, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the cli.
+This command line interface allows users to interact with their alpaca brokerage account through the terminal.
+Features include view current profits and positions, get asset price quotes, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the command line.
 
 ---
 
@@ -96,14 +97,8 @@ python terminal.py -h
 
 To interact with the terminal through an interactive menu:
 ```sh
-python terminal.py -s
+python terminal.py -im
 ```
-
----
-### 🤖 Running Program with docker
-This program can also be run as a container using the provided dockerfile. Simply create a new image using this dockerfile and run the container.
-
-
 ---
 
 ## 🤝 Contributing
@@ -112,8 +107,6 @@ Contributions are welcome! Here are several ways you can contribute:
 
 - **[Submit Pull Requests](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
 - **[Report Issues](https://github.com/AidanAlr/Pairs-Trading-Algorithm/issues)**: Submit bugs found or log feature requests for AIDANALR.
-
-
 
 ---
 
