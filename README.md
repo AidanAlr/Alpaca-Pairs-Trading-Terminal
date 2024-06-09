@@ -1,6 +1,5 @@
 <div align="center">
 <h1 align="center">
-<img src="" width="100" />
 <br> Alpaca Stock Terminal CLI with Pairs Trading Algorithm</h1>
 <h3>◦ Developed to interact with the ALPACA API.</h3>
 
