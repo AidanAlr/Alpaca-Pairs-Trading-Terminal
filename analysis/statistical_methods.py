@@ -20,7 +20,7 @@ def collect_metrics_for_pair(stock_1, stock_2) -> pd.DataFrame:
         start=Dates.START_DATE.value,
         end=Dates.END_DATE.value,
     )
-    stock_data_df = stock_data_df.stack()
+    stock_data_df = stock_data_df.stack(future_stack=True)
 
     # Finding the required metrics
     stock_data_df["return"] = (

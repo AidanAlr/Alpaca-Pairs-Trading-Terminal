@@ -76,6 +76,12 @@ def get_asset_price(symbol: str) -> float:
     return price
 
 
+def get_trading_client():
+    return TradingClient(
+        AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value, paper=True
+    )
+
+
 class Alpaca:
     """
     Alpaca class to manage trading activities.
@@ -86,41 +92,17 @@ class Alpaca:
     def __init__(self):
         """
         Constructor for Alpaca class.
-        Initializes connection to Alpaca API, retrieves current positions,
-        and sets up trading stream.
+        Initializes connection to Alpaca API, retrieves current positions and buying power.
         """
         self.connected = False
-        self.client = self.connect_to_alpaca(
-            AccountDetails.API_KEY.value, AccountDetails.API_SECRET.value, paper=True
-        )
-        self.in_position = bool(self.client.get_all_positions())
-        self.positions = self.client.get_all_positions()
-        self.balance = self.account.buying_power
-
-    def connect_to_alpaca(
-        self, api_key: str, api_secret: str, paper: bool
-    ) -> TradingClient:
-        """
-        Establishes a connection to the Alpaca trading service using API credentials.
-        If successful, prints the connection status and available buying power.
-        Returns a TradingClient object.
-
-        Args:
-        api_key (str): Alpaca API key.
-        api_secret (str): Alpaca API secret.
-        paper (bool): Flag for paper trading (True for paper trading, False for live trading).
-
-        Returns:
-        TradingClient: A client object to interact with Alpaca's trading services.
-        """
-        try:
-            trading_client = TradingClient(api_key, api_secret, paper=paper)
-            self.account = trading_client.get_account()
+        self.account = None
+        self.client = get_trading_client()
+        if self.client:
             self.connected = True
-            return trading_client
-
-        except Exception as e:
-            logging.error(e)
+        self.account = self.client.get_account()
+        self.positions = self.client.get_all_positions()
+        self.in_position = bool(self.positions)
+        self.balance = self.account.buying_power
 
     def send_market_order(self, symbol: str, qty: int | float, side: OrderSide | str):
         """
@@ -191,7 +173,7 @@ class Alpaca:
         except Exception as e:
             red_bold_print(e)
 
-    def enter_hedge_position(self, stock_1, stock_2, side, leverage, hr):
+    def enter_hedge_position(self, stock_1, stock_2, stock_1_side, leverage, hr):
         """
         Enters a hedge position by placing market orders on two stocks.
         A hedge position involves buying one stock and selling another.
@@ -204,27 +186,24 @@ class Alpaca:
         hr (float): Hedge ratio to calculate the quantity of the second stock.
         """
         stock_2_side = None
-        if side == "buy":
-            stock_2_side = OrderSide.SELL
+        if stock_1_side == "buy":
+            stock_2_side = "sell"
             logging.info(
                 "This position will purchase {} shares of {} and short {} shares of {} ".format(
                     leverage, stock_1, hr * leverage, stock_2
                 )
             )
-        elif side == "sell":
-            stock_2_side = OrderSide.BUY
+        elif stock_1_side == "sell":
+            stock_2_side = "buy"
             logging.info(
                 "This position will short {} shares of {} and purchase {} shares of {} ".format(
                     leverage, stock_1, hr * leverage, stock_2
                 )
             )
 
-        side_map = {OrderSide.BUY: "buy", OrderSide.SELL: "sell"}
         try:
-            self.send_market_order(stock_1, leverage, side)
-            self.send_market_order(
-                stock_2, round(hr * leverage, 2), side_map[stock_2_side]
-            )
+            self.send_market_order(stock_1, leverage, stock_1_side)
+            self.send_market_order(stock_2, round(hr * leverage, 2), stock_2_side)
             red_bold_print("Hedge position filled!")
         except Exception as e:
             print(e)
@@ -285,28 +264,6 @@ class Alpaca:
                 for column in columns_to_convert:
                     assets[column] = assets[column].astype(float)
         return assets
-
-    def print_positions(self):
-        """
-        Prints the details of the current positions held.
-        Includes the side (Long/Short), quantity, purchase price, and unrealized profit percentage.
-        """
-        portfolio = self.client.get_all_positions()
-        side_map = {PositionSide.SHORT: "Short", PositionSide.LONG: "Long"}
-        print("Current Positions:")
-        if portfolio:
-            for position in portfolio:
-                print(
-                    "{} {} shares of {} purchased for {} current unrealised profit_pc is {}%".format(
-                        side_map[position.side],
-                        position.qty.replace("-", ""),
-                        position.symbol,
-                        abs(float(position.cost_basis)),
-                        self.get_unrealised_profit_pc(),
-                    )
-                )
-        else:
-            print("No positions")
 
     def get_absolute_unrealised_profit(self):
         """
@@ -411,46 +368,37 @@ class Alpaca:
             except Exception as e:
                 print(f"Exception occured closing positions: {e}")
 
+    def print_positions(self):
+        # Format the DataFrame as a table
+        table = self.get_positions_df()
+        table = table[["symbol", "side", "qty", "avg_entry_price", "unrealized_pl"]]
+        curr_time = pd.Timestamp.now().time().strftime("%X")
+        # Move cursor to the beginning of the line
+        print()
+        print(f"{curr_time} Current Profit: {self.get_unrealised_profit_pc()} %")
+        with pd.option_context(
+            "display.max_rows",
+            None,
+            "display.max_columns",
+            None,
+            "display.precision",
+            3,
+        ):
+            print(table)
+
     def live_profit_monitor(self, seconds):
         """
         Prints the current unrealized profit percentage
         """
-
         count = seconds
         self.in_position = bool(self.client.get_all_positions())
-
         if self.in_position:
             while count > 0:
                 try:
                     clear_terminal()
-
-                    # Format the DataFrame as a table
-                    table = self.get_positions_df()
-                    table = table[
-                        ["symbol", "side", "qty", "avg_entry_price", "unrealized_pl"]
-                    ]
-                    curr_time = pd.Timestamp.now().time().strftime("%X")
-                    output = f"{curr_time} Current Profit: {self.get_unrealised_profit_pc()} %"
-
-                    # Move cursor to the beginning of the line
-                    sys.stdout.write("\r")
-                    sys.stdout.write(output)
-                    sys.stdout.flush()
-
+                    self.print_positions()
                     # Move cursor to the beginning of the next line to overwrite old text
                     sys.stdout.write("\n")
-
-                    # Overwrite the line with padding
-                    with pd.option_context(
-                        "display.max_rows",
-                        None,
-                        "display.max_columns",
-                        None,
-                        "display.precision",
-                        3,
-                    ):
-                        print(table)
-
                     time.sleep(1)
                     count -= 1
 

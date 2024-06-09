@@ -24,31 +24,34 @@ def main_menu(alpaca: Alpaca) -> str:
     blue_bold_print("5: Manual Trade")
     blue_bold_print("6: Get Price Quote")
     blue_bold_print("7: Close All Positions")
+    blue_bold_print("0: Exit")
     choice = input("Please select an option: ")
     return choice
 
 
 def main():
     """Main function for the CLI controller."""
-    alpaca_connection = Alpaca()
+    alpaca = Alpaca()
     while True:
         try:
-            choice = main_menu(alpaca=alpaca_connection)
+            choice = main_menu(alpaca=alpaca)
             match choice:
                 case "1":
-                    alpaca_executor.live_position_menu(alpaca_connection)
+                    alpaca_executor.live_position_menu(alpaca)
                 case "2":
                     analysis_executor.run_analysis()
                 case "3":
-                    analysis_executor.execute_pairs_strategy([])
+                    analysis_executor.create_pairs_strategy()
                 case "4":
-                    analysis_executor.backtest_strategy([])
+                    analysis_executor.backtest_strategy()
                 case "5":
-                    alpaca_executor.manual_trade_menu(alpaca_connection)
+                    alpaca_executor.manual_trade_menu(alpaca)
                 case "6":
                     alpaca_executor.quote_menu()
                 case "7":
-                    alpaca_connection.close_all_positions()
+                    alpaca.close_all_positions()
+                case "0":
+                    sys.exit(0)
                 case _:  # Default case
                     raise ValueError
         except ValueError:
