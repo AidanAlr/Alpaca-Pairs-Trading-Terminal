@@ -1,7 +1,7 @@
 <div align="center">
 <h1 align="center">
 <br> Alpaca Stock Terminal CLI with Pairs Trading Algorithm</h1>
-<h3>◦ Developed to interact with the ALPACA API.</h3>
+<h3>◦ Built on the official ALPACA API.</h3>
 
 <p align="center">
 <img src="https://img.shields.io/badge/SciPy-8CAAE6.svg?style=flat-square&logo=SciPy&logoColor=white" alt="SciPy" />
