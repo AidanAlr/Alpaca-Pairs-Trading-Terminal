@@ -21,6 +21,30 @@ This command line interface allows users to interact with their alpaca brokerage
 Features include view current profits and positions, get asset price quotes, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the command line.
 
 ---
+Sure, here's a brief explanation for your `README.md`:
+
+---
+
+## Usage Documentation
+
+This script uses `argparse` to handle command-line arguments for interacting with Alpaca trading functions. Below are the available options:
+
+### Command-Line Arguments
+
+- `-t`, `--ticker` : Enter an Alpaca ticker. Add `-q` or `-tr` for quote or trade.
+- `-tr`, `--trade` : Visit the trade menu for the ticker.
+- `-p`, `--positions` : Print current positions.
+- `--exitall` : Exit all positions immediately.
+- `-im`, `--imenu` : Enter interactive menu.
+- `-q`, `--quote` : Get a quote for the ticker.
+
+### Example Usage
+
+```sh
+python terminal.py -t AAPL -q
+```
+
+This will get a quote for the ticker `AAPL`.
 
 ## Demo of interactive menu
 https://private-user-images.githubusercontent.com/112656616/300945934-8416627c-4eca-48e3-b22e-599934ea1b14.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDY2NDUzODMsIm5iZiI6MTcwNjY0NTA4MywicGF0aCI6Ii8xMTI2NTY2MTYvMzAwOTQ1OTM0LTg0MTY2MjdjLTRlY2EtNDhlMy1iMjJlLTU5OTkzNGVhMWIxNC5tcDQ_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMTMwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDEzMFQyMDA0NDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT03MDY1Y2Y3Mzk3OTc4ZmU4MzBjYTQ3MmYzZGRlY2ZjZGM2Yzk3MTg2OWIzMmY4YWE4ZDc4MGNiY2YxODViY2JlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.TDAbEMsk63y7zbIQVI1LQdjiZd_5YqkpmNl_3MQ91Ys
