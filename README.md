@@ -21,9 +21,6 @@ This command line interface allows users to interact with their alpaca brokerage
 Features include view current profits and positions, get asset price quotes, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the command line.
 
 ---
-Sure, here's a brief explanation for your `README.md`:
-
----
 
 ## Usage Documentation
 
