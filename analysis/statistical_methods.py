@@ -56,7 +56,7 @@ def collect_metrics_for_pair(stock_1, stock_2) -> pd.DataFrame:
 
     # Calculating the spread of stock 1 and stock 2 price
     stock_data_df["spread"] = (
-        stock_data_df[stock_1] - stock_data_df[stock_2] * stock_data_df["hedge_ratio"]
+        stock_data_df[stock_2] - stock_data_df[stock_1] * stock_data_df["hedge_ratio"]
     )
 
     # Rolling Correlation test
