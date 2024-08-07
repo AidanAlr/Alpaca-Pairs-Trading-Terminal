@@ -96,14 +96,16 @@ git clone https://github.com/AidanAlr/Pairs-Trading-Algorithm
 ```sh
 cd Pairs-trading-Algorithm
 ```
-
-3. Install the dependencies:
+3. Create and enter venv
+```sh
+python3 -m venv .venv && source .venv/bin/activate
+```
+4. Install the dependencies:
 ```sh
 pip install -r requirements.txt
 ```
-```sh
-add account details to trading .FAKENV and change to .env
-```
+5. Add account details to trading .FAKENV and change to .env
+
 
 ### 🤖 Running Program
 
