@@ -21,6 +21,27 @@ This command line interface allows users to interact with their alpaca brokerage
 Features include view current profits and positions, get asset price quotes, execute trades, run analyses, backtest strategies, and implement a pairs trading strategy all from the command line.
 
 ---
+### 🔧 Installation
+
+1. Clone the Pairs-Trading-Algorithm repository:
+```sh
+git clone https://github.com/AidanAlr/Pairs-Trading-Algorithm
+```
+
+2. Change to the project directory:
+```sh
+cd Pairs-trading-Algorithm
+```
+3. Create and enter venv
+```sh
+python3 -m venv .venv && source .venv/bin/activate
+```
+4. Install the dependencies:
+```sh
+pip install -r requirements.txt
+```
+5. Add account details to trading .FAKENV and change to .env
+
 
 ## Usage Documentation
 
@@ -83,44 +104,6 @@ Option to conduct get the market price of an asset.
 
 Option to quickly exit all positions.
 
----
-
-### 🔧 Installation
-
-1. Clone the Pairs-Trading-Algorithm repository:
-```sh
-git clone https://github.com/AidanAlr/Pairs-Trading-Algorithm
-```
-
-2. Change to the project directory:
-```sh
-cd Pairs-trading-Algorithm
-```
-3. Create and enter venv
-```sh
-python3 -m venv .venv && source .venv/bin/activate
-```
-4. Install the dependencies:
-```sh
-pip install -r requirements.txt
-```
-5. Add account details to trading .FAKENV and change to .env
-
-
-### 🤖 Running Program
-
-Change to the directory containing the cloned repository.
-Open the terminal in this folder.
-
-Enter to see a list of command line arguments:
-```sh
-python terminal.py -h
-```
-
-To interact with the terminal through an interactive menu:
-```sh
-python terminal.py -im
-```
 ---
 
 ## 🤝 Contributing
